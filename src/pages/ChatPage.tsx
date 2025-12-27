@@ -332,7 +332,7 @@ function ChatPage() {
   };
 
   return (
-    <div className="flex-1 h-svh flex flex-col min-w-0 relative">
+    <div className="flex-1 h-dvh flex flex-col min-w-0 relative">
       {/* 顶部栏 */}
       <header className="h-14 bg-white/80 dark:bg-[#1c1c1e]/80 backdrop-blur-xl flex items-center justify-between px-6 sticky top-0 z-30">
         <div className="flex items-center gap-3">
