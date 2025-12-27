@@ -19,16 +19,29 @@ function App() {
   const [caretVisible, setCaretVisible] = useState(false)
   const [caretPosition, setCaretPosition] = useState({ x: 0, y: 0 })
   const [tailActive, setTailActive] = useState(false)
+  const [textareaRect, setTextareaRect] = useState({ left: 0, top: 0 })
   const textareaRef = useRef(null)
   const mirrorRef = useRef(null)
+  const caretRef = useRef(null)
   const lastPosRef = useRef({ x: 0, y: 0 })
   const tailTimeoutRef = useRef(null)
 
-  // 同步 mirror 样式
+  // 智能预测相关
+  const currentPosRef = useRef({ x: 0, y: 0 }) // 当前显示位置
+  const targetPosRef = useRef({ x: 0, y: 0 }) // 目标位置（实际光标位置）
+  const lastInputTimeRef = useRef(0) // 上次输入时间
+  const animationFrameRef = useRef(null) // 动画帧ID
+  const moveDirectionRef = useRef(1) // 移动方向：1=向右，-1=向左
+
+  // 同步 mirror 样式和位置
   const syncMirrorStyle = () => {
     const textarea = textareaRef.current
     const mirror = mirrorRef.current
     if (!textarea || !mirror) return
+
+    // 更新 textarea 位置
+    const rect = textarea.getBoundingClientRect()
+    setTextareaRect({ left: rect.left, top: rect.top })
 
     const computed = window.getComputedStyle(textarea)
 
@@ -40,7 +53,7 @@ function App() {
       'paddingLeft', 'paddingRight', 'borderLeftWidth',
       'borderRightWidth', 'borderTopWidth', 'borderBottomWidth',
       'width', 'maxWidth', 'whiteSpace', 'wordWrap',
-      'textAlign', 'textIndent'
+      'textAlign', 'textIndent', 'boxSizing'
     ]
 
     properties.forEach(prop => {
@@ -54,7 +67,9 @@ function App() {
     const mirror = mirrorRef.current
     if (!textarea || !mirror) return { x: 0, y: 0 }
 
-    const textBeforeCaret = input.substring(0, textarea.selectionStart)
+    // 直接使用 textarea.value，而不是 input 状态
+    // 因为 input 状态更新可能滞后于 selectionStart
+    const textBeforeCaret = textarea.value.substring(0, textarea.selectionStart)
 
     // 清空 mirror 并设置内容
     mirror.textContent = textBeforeCaret
@@ -64,12 +79,12 @@ function App() {
     span.textContent = '\u200B' // 零宽字符
     mirror.appendChild(span)
 
-    const textareaRect = textarea.getBoundingClientRect()
     const spanRect = span.getBoundingClientRect()
+    const textareaCurrentRect = textarea.getBoundingClientRect()
 
-    // 计算相对位置
-    const x = spanRect.left - textareaRect.left
-    const y = spanRect.top - textareaRect.top
+    // 计算相对于 textarea 左上角的位置
+    const x = spanRect.left - textareaCurrentRect.left
+    const y = spanRect.top - textareaCurrentRect.top
 
     // 清理
     mirror.removeChild(span)
@@ -83,10 +98,22 @@ function App() {
     if (!textarea) return
 
     const pos = getCaretPosition()
+    const rect = textarea.getBoundingClientRect()
+    const now = performance.now()
 
-    // 计算移动距离，决定是否显示尾巴
-    const dx = Math.abs(pos.x - lastPosRef.current.x)
-    const dy = Math.abs(pos.y - lastPosRef.current.y)
+    // 更新 textarea 位置
+    setTextareaRect({ left: rect.left, top: rect.top })
+
+    // 计算移动方向（用于尾巴方向）
+    const dx = pos.x - lastPosRef.current.x
+    if (dx > 0.5) {
+      moveDirectionRef.current = 1 // 向右移动（输入）
+    } else if (dx < -0.5) {
+      moveDirectionRef.current = -1 // 向左移动（删除）
+    }
+
+    // 计算移动距离（用于尾巴触发）
+    const dy = pos.y - lastPosRef.current.y
     const distance = Math.sqrt(dx * dx + dy * dy)
 
     // 移动超过阈值时触发尾巴
@@ -96,10 +123,77 @@ function App() {
       tailTimeoutRef.current = setTimeout(() => setTailActive(false), 150)
     }
 
-    setCaretPosition(pos)
+    // 更新上次位置记录
     lastPosRef.current = pos
+
+    // 设置目标位置（全局坐标）
+    targetPosRef.current = {
+      x: rect.left + pos.x,
+      y: rect.top + pos.y
+    }
+
+    // 记录输入时间
+    lastInputTimeRef.current = now
+
     setCaretVisible(true)
   }
+
+  // 平滑动画循环 - 带智能速度调整
+  useEffect(() => {
+    const caretEl = caretRef.current
+    if (!caretEl) return
+
+    let lastFrameTime = performance.now()
+
+    const animate = (currentTime) => {
+      const frameDelta = currentTime - lastFrameTime
+      lastFrameTime = currentTime
+
+      if (caretVisible) {
+        // 计算与目标的距离
+        const dx = targetPosRef.current.x - currentPosRef.current.x
+        const dy = targetPosRef.current.y - currentPosRef.current.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+
+        // 检查是否正在输入（100ms 内有输入）
+        const isTyping = (currentTime - lastInputTimeRef.current) < 100
+        const frameRatio = Math.min(frameDelta / 16.67, 2)
+
+        let lerpFactor
+        if (isTyping) {
+          // 输入时快速跟随
+          lerpFactor = Math.min(2.0 * frameRatio, 1)
+        } else {
+          // 停止输入后平滑移动
+          lerpFactor = Math.min(0.25 * frameRatio, 1)
+        }
+
+        // 距离很小时直接到达
+        if (dist < 0.5) {
+          currentPosRef.current = { ...targetPosRef.current }
+        } else {
+          currentPosRef.current = {
+            x: currentPosRef.current.x + dx * lerpFactor,
+            y: currentPosRef.current.y + dy * lerpFactor
+          }
+        }
+
+        // 设置位置和方向
+        caretEl.style.transform = `translate(${currentPosRef.current.x}px, ${currentPosRef.current.y}px)`
+        caretEl.style.setProperty('--move-direction', moveDirectionRef.current.toString())
+      }
+
+      animationFrameRef.current = requestAnimationFrame(animate)
+    }
+
+    animationFrameRef.current = requestAnimationFrame(animate)
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+      }
+    }
+  }, [caretVisible])
 
   // 初始化和窗口变化时同步样式
   useEffect(() => {
@@ -164,38 +258,36 @@ function App() {
       <div
         ref={mirrorRef}
         id="caret-mirror"
-        className="absolute invisible -z-10 overflow-hidden"
+        style={{
+          position: 'fixed',
+          visibility: 'hidden',
+          zIndex: -10,
+          overflow: 'hidden',
+          left: textareaRect.left,
+          top: textareaRect.top,
+        }}
       />
 
       {/* 自定义光标组件 */}
       {caretVisible && (
         <div
-          className="absolute z-50 pointer-events-none transition-transform duration-75 ease-out"
+          ref={caretRef}
+          className="comet-caret"
+          data-direction={moveDirectionRef.current > 0 ? '1' : '-1'}
           style={{
-            left: caretPosition.x + 16, // textarea left padding
-            top: caretPosition.y + 54, // offset for header + input padding
+            // 位置由 transform 在动画循环中直接设置
           }}
         >
           {/* 彗星尾巴 */}
-          <div
-            className={`absolute right-0 top-1/2 -translate-y-1/2 transition-opacity duration-150 ${
-              tailActive ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{
-              width: '32px',
-              height: '3px',
-              background: 'linear-gradient(90deg, transparent, #95C0EC)',
-              filter: 'blur(1px)',
-              transformOrigin: 'right center',
-            }}
-          />
+          <div className={`comet-tail ${tailActive ? 'active' : ''}`} />
+
           {/* 尾巴粒子 */}
           {tailActive && [...Array(4)].map((_, i) => (
             <div
               key={i}
-              className="absolute top-1/2 -translate-y-1/2 rounded-full bg-[#95C0EC]"
+              className="comet-particle"
               style={{
-                right: `${(i + 1) * 10 + 8}px`,
+                '--particle-offset': `${(i + 1) * 10 + 8}px`,
                 width: `${6 - i}px`,
                 height: `${6 - i}px`,
                 opacity: 0.6 - i * 0.12,
@@ -203,49 +295,14 @@ function App() {
               }}
             />
           ))}
+
           {/* 主光标 */}
-          <div
-            className="relative w-0.5 h-5 bg-[#95C0EC] rounded-sm"
-            style={{
-              animation: 'caret-blink 1s ease-in-out infinite',
-            }}
-          >
+          <div className="comet-caret-main">
             {/* 光标头部光晕 */}
-            <div
-              className="absolute -left-1.5 top-0 w-4 h-4 bg-[#95C0EC]/40 rounded-full blur-sm"
-              style={{ animation: 'caret-glow 1.5s ease-in-out infinite' }}
-            />
+            <div className="comet-caret-glow" />
           </div>
         </div>
       )}
-
-      {/* 动画样式 */}
-      <style>{`
-        @keyframes caret-blink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-        @keyframes caret-glow {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 0.5; transform: scale(1.1); }
-        }
-        @keyframes particle-fade {
-          0% {
-            opacity: 0.6;
-            transform: translate(-50%, -50%) scale(1);
-          }
-          100% {
-            opacity: 0;
-            transform: translate(-50%, -50%) translateX(-8px) scale(0.5);
-          }
-        }
-        .custom-caret-textarea {
-          caret-color: transparent;
-        }
-        .custom-caret-textarea::selection {
-          background-color: #95C0EC30;
-        }
-      `}</style>
 
       <div className="h-screen flex bg-white">
         {/* 移动端遮罩 */}

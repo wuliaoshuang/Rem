@@ -35,3 +35,126 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* 自定义光标样式 */
+.custom-caret-textarea {
+  caret-color: transparent;
+}
+
+.custom-caret-textarea::selection {
+  background-color: rgba(149, 192, 236, 0.2);
+}
+
+/* 光标闪烁动画 */
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* 光标光晕呼吸动画 */
+@keyframes caret-glow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+}
+
+/* 粒子消失动画 */
+@keyframes particle-fade {
+  0% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateX(-8px) scale(0.5);
+  }
+}
+
+/* 彗星光标组件样式 */
+.comet-caret {
+  position: fixed;
+  z-index: 50;
+  pointer-events: none;
+  /* 移除 transition，使用 requestAnimationFrame 实现丝滑动画 */
+}
+
+.comet-caret-main {
+  position: relative;
+  width: 2px;
+  height: 20px;
+  background-color: #95C0EC;
+  border-radius: 1px;
+  animation: caret-blink 1s ease-in-out infinite;
+}
+
+.comet-caret-glow {
+  position: absolute;
+  left: -6px;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  background-color: rgba(149, 192, 236, 0.4);
+  border-radius: 50%;
+  filter: blur(4px);
+  animation: caret-glow 1.5s ease-in-out infinite;
+}
+
+.comet-tail {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #95C0EC);
+  filter: blur(1px);
+  transition: opacity 150ms, left 0.1s, right 0.1s, transform 0.1s;
+}
+
+/* 向右移动时（输入）- 尾巴在左侧 */
+.comet-caret[data-direction="1"] .comet-tail {
+  right: 100%;
+  transform-origin: right center;
+}
+
+/* 向左移动时（删除）- 尾巴在右侧，方向反转 */
+.comet-caret[data-direction="-1"] .comet-tail {
+  left: 100%;
+  right: auto;
+  background: linear-gradient(270deg, transparent, #95C0EC);
+  transform-origin: left center;
+}
+
+.comet-tail.active {
+  opacity: 1;
+}
+
+.comet-tail:not(.active) {
+  opacity: 0;
+}
+
+.comet-particle {
+  position: absolute;
+  top: 50%;
+  border-radius: 50%;
+  background-color: #95C0EC;
+  /* 通过 CSS 变量控制偏移方向 */
+  offset-distance: var(--particle-offset, 10px);
+}
+
+/* 向右移动时（输入）- 粒子在左侧，向左延伸 */
+.comet-caret[data-direction="1"] .comet-particle {
+  right: 100%;
+  transform: translate(calc(var(--particle-offset, 10px) * -1), -50%);
+}
+
+/* 向左移动时（删除）- 粒子在右侧，向右延伸 */
+.comet-caret[data-direction="-1"] .comet-particle {
+  left: 100%;
+  right: auto;
+  transform: translate(var(--particle-offset, 10px), -50%);
+}
