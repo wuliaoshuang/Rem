@@ -1,57 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import {
   Send, Plus, Code, Image, FileText, Settings,
-  User, Bot, Copy, Check, Ellipsis, MessageSquare,
-  Paperclip, Mic, Sticker, X, Sidebar, PanelLeftClose, PanelLeftOpen, Menu
+  Copy, Check, Ellipsis, MessageSquare,
+  Paperclip, Mic, Sticker, X, PanelLeftClose, PanelLeftOpen, Menu
 } from 'lucide-react'
-
-// 自定义光标彗星尾巴组件
-function CometCaret({ visible, position }) {
-  if (!visible) return null
-
-  return (
-    <>
-      {/* 彗星尾巴粒子 */}
-      {[...Array(5)].map((_, i) => (
-        <div
-          key={i}
-          className="absolute pointer-events-none z-50"
-          style={{
-            left: position.x,
-            top: position.y,
-            transform: `translate(-50%, -50%)`,
-          }}
-        >
-          <div
-            className="rounded-full bg-[#95C0EC]"
-            style={{
-              width: `${8 - i * 1.5}px`,
-              height: `${8 - i * 1.5}px`,
-              opacity: 1 - i * 0.18,
-              animation: `comet-tail 0.6s ease-out ${i * 0.05}s both`,
-            }}
-          />
-        </div>
-      ))}
-      {/* 主光标 */}
-      <div
-        className="absolute pointer-events-none z-50 w-0.5 h-5 bg-[#95C0EC] rounded-sm"
-        style={{
-          left: position.x,
-          top: position.y,
-          transform: 'translate(-50%, -100%)',
-          animation: 'caret-blink 1s ease-in-out infinite',
-        }}
-      >
-        {/* 光标头部光晕 */}
-        <div
-          className="absolute -left-1.5 top-0 w-4 h-4 bg-[#95C0EC]/30 rounded-full blur-sm"
-          style={{ animation: 'caret-glow 1.5s ease-in-out infinite' }}
-        />
-      </div>
-    </>
-  )
-}
 
 function App() {
   const [messages, setMessages] = useState([
@@ -63,75 +15,113 @@ function App() {
   const [showTools, setShowTools] = useState(false)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
 
-  // 自定义光标状态
+  // 光标状态
   const [caretVisible, setCaretVisible] = useState(false)
   const [caretPosition, setCaretPosition] = useState({ x: 0, y: 0 })
+  const [tailActive, setTailActive] = useState(false)
   const textareaRef = useRef(null)
-  const caretTimeoutRef = useRef(null)
+  const mirrorRef = useRef(null)
+  const lastPosRef = useRef({ x: 0, y: 0 })
+  const tailTimeoutRef = useRef(null)
 
-  // 计算光标位置
-  const updateCaretPosition = () => {
+  // 同步 mirror 样式
+  const syncMirrorStyle = () => {
+    const textarea = textareaRef.current
+    const mirror = mirrorRef.current
+    if (!textarea || !mirror) return
+
+    const computed = window.getComputedStyle(textarea)
+
+    // 需要同步的所有样式属性
+    const properties = [
+      'fontFamily', 'fontSize', 'fontWeight', 'fontStyle',
+      'letterSpacing', 'lineHeight', 'textTransform',
+      'wordSpacing', 'paddingTop', 'paddingBottom',
+      'paddingLeft', 'paddingRight', 'borderLeftWidth',
+      'borderRightWidth', 'borderTopWidth', 'borderBottomWidth',
+      'width', 'maxWidth', 'whiteSpace', 'wordWrap',
+      'textAlign', 'textIndent'
+    ]
+
+    properties.forEach(prop => {
+      mirror.style[prop] = computed[prop]
+    })
+  }
+
+  // 获取光标位置
+  const getCaretPosition = () => {
+    const textarea = textareaRef.current
+    const mirror = mirrorRef.current
+    if (!textarea || !mirror) return { x: 0, y: 0 }
+
+    const textBeforeCaret = input.substring(0, textarea.selectionStart)
+
+    // 清空 mirror 并设置内容
+    mirror.textContent = textBeforeCaret
+
+    // 创建零宽字符 span 来定位
+    const span = document.createElement('span')
+    span.textContent = '\u200B' // 零宽字符
+    mirror.appendChild(span)
+
+    const textareaRect = textarea.getBoundingClientRect()
+    const spanRect = span.getBoundingClientRect()
+
+    // 计算相对位置
+    const x = spanRect.left - textareaRect.left
+    const y = spanRect.top - textareaRect.top
+
+    // 清理
+    mirror.removeChild(span)
+
+    return { x, y }
+  }
+
+  // 更新光标位置
+  const updateCaret = () => {
     const textarea = textareaRef.current
     if (!textarea) return
 
-    // 创建镜像 div 来测量光标位置
-    const mirror = document.createElement('div')
-    const computed = window.getComputedStyle(textarea)
-    const styles = [
-      'boxSizing', 'width', 'height', 'overflowX', 'overflowY',
-      'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',
-      'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
-      'fontStyle', 'fontVariant', 'fontWeight', 'fontStretch',
-      'fontSize', 'lineHeight', 'fontFamily', 'textAlign',
-      'textTransform', 'textIndent', 'textDecoration',
-      'letterSpacing', 'wordSpacing'
-    ]
+    const pos = getCaretPosition()
 
-    styles.forEach(s => mirror.style[s] = computed[s])
-    mirror.style.position = 'absolute'
-    mirror.style.visibility = 'hidden'
-    mirror.style.whiteSpace = 'pre-wrap'
-    mirror.style.wordWrap = 'break-word'
-    document.body.appendChild(mirror)
+    // 计算移动距离，决定是否显示尾巴
+    const dx = Math.abs(pos.x - lastPosRef.current.x)
+    const dy = Math.abs(pos.y - lastPosRef.current.y)
+    const distance = Math.sqrt(dx * dx + dy * dy)
 
-    const textBeforeCaret = input.substring(0, textarea.selectionStart)
-    mirror.textContent = textBeforeCaret
+    // 移动超过阈值时触发尾巴
+    if (distance > 3) {
+      setTailActive(true)
+      if (tailTimeoutRef.current) clearTimeout(tailTimeoutRef.current)
+      tailTimeoutRef.current = setTimeout(() => setTailActive(false), 150)
+    }
 
-    const span = document.createElement('span')
-    span.textContent = input.substring(textarea.selectionStart, textarea.selectionStart + 1) || '|'
-    mirror.appendChild(span)
-
-    const rect = textarea.getBoundingClientRect()
-    const spanRect = span.getBoundingClientRect()
-
-    setCaretPosition({
-      x: spanRect.left - rect.left + 12, // +12 for padding
-      y: spanRect.top - rect.top + 14, // +14 for padding
-    })
-
-    document.body.removeChild(mirror)
+    setCaretPosition(pos)
+    lastPosRef.current = pos
     setCaretVisible(true)
-
-    // 重置闪烁计时器
-    if (caretTimeoutRef.current) clearTimeout(caretTimeoutRef.current)
-    caretTimeoutRef.current = setTimeout(() => {
-      // 保持可见，光标会通过 CSS 动画闪烁
-    }, 100)
   }
 
-  // 监听输入和选择变化
+  // 初始化和窗口变化时同步样式
   useEffect(() => {
-    updateCaretPosition()
+    syncMirrorStyle()
+    const handleResize = () => syncMirrorStyle()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // 监听输入变化
+  useEffect(() => {
+    updateCaret()
   }, [input])
 
   const handleInputFocus = () => {
-    updateCaretPosition()
+    syncMirrorStyle()
+    updateCaret()
     setCaretVisible(true)
   }
 
   const handleInputBlur = () => {
-    // 延迟隐藏，让动画完成
-    setTimeout(() => setCaretVisible(false), 200)
+    setTimeout(() => setCaretVisible(false), 100)
   }
 
   const quickActions = [
@@ -170,34 +160,88 @@ function App() {
 
   return (
     <>
-      {/* 自定义光标 */}
-      <CometCaret visible={caretVisible} position={caretPosition} />
+      {/* 镜像 div - 用于计算光标位置 */}
+      <div
+        ref={mirrorRef}
+        id="caret-mirror"
+        className="absolute invisible -z-10 overflow-hidden"
+      />
+
+      {/* 自定义光标组件 */}
+      {caretVisible && (
+        <div
+          className="absolute z-50 pointer-events-none transition-transform duration-75 ease-out"
+          style={{
+            left: caretPosition.x + 16, // textarea left padding
+            top: caretPosition.y + 54, // offset for header + input padding
+          }}
+        >
+          {/* 彗星尾巴 */}
+          <div
+            className={`absolute right-0 top-1/2 -translate-y-1/2 transition-opacity duration-150 ${
+              tailActive ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              width: '32px',
+              height: '3px',
+              background: 'linear-gradient(90deg, transparent, #95C0EC)',
+              filter: 'blur(1px)',
+              transformOrigin: 'right center',
+            }}
+          />
+          {/* 尾巴粒子 */}
+          {tailActive && [...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute top-1/2 -translate-y-1/2 rounded-full bg-[#95C0EC]"
+              style={{
+                right: `${(i + 1) * 10 + 8}px`,
+                width: `${6 - i}px`,
+                height: `${6 - i}px`,
+                opacity: 0.6 - i * 0.12,
+                animation: `particle-fade 0.4s ease-out ${i * 0.03}s both`,
+              }}
+            />
+          ))}
+          {/* 主光标 */}
+          <div
+            className="relative w-0.5 h-5 bg-[#95C0EC] rounded-sm"
+            style={{
+              animation: 'caret-blink 1s ease-in-out infinite',
+            }}
+          >
+            {/* 光标头部光晕 */}
+            <div
+              className="absolute -left-1.5 top-0 w-4 h-4 bg-[#95C0EC]/40 rounded-full blur-sm"
+              style={{ animation: 'caret-glow 1.5s ease-in-out infinite' }}
+            />
+          </div>
+        </div>
+      )}
 
       {/* 动画样式 */}
       <style>{`
         @keyframes caret-blink {
           0%, 100% { opacity: 1; }
-          50% { opacity: 0.3; }
+          50% { opacity: 0.4; }
         }
         @keyframes caret-glow {
           0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 0.6; transform: scale(1.2); }
+          50% { opacity: 0.5; transform: scale(1.1); }
         }
-        @keyframes comet-tail {
+        @keyframes particle-fade {
           0% {
-            opacity: 0.8;
+            opacity: 0.6;
             transform: translate(-50%, -50%) scale(1);
           }
           100% {
             opacity: 0;
-            transform: translate(-50%, -50%) translateX(-12px) scale(0.3);
+            transform: translate(-50%, -50%) translateX(-8px) scale(0.5);
           }
         }
-        /* 隐藏原生光标 */
         .custom-caret-textarea {
           caret-color: transparent;
         }
-        /* 隐藏原生选择高亮时的光标 */
         .custom-caret-textarea::selection {
           background-color: #95C0EC30;
         }
@@ -225,7 +269,9 @@ function App() {
             <div className="flex items-center justify-between gap-2">
               <div className={`flex items-center ${sidebarCollapsed ? 'justify-center flex-1' : 'gap-3'}`}>
                 <div className="w-8 h-8 bg-[#95C0EC] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Bot className="w-4 h-4 text-white" />
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
                 </div>
                 {!sidebarCollapsed && (
                   <span className="font-semibold text-[#1d1d1f] text-[15px]">Assistant</span>
@@ -354,7 +400,7 @@ function App() {
 
                   {/* 用户消息 - 气泡模式，无头像 */}
                   {message.role === 'user' && (
-                    <div className="flex items-end gap-3 max-w-2xl">
+                    <div className="flex items-end gap-3 max-w-2xl ml-auto">
                       <div className="relative group/bubble">
                         <div className="px-4 py-2.5 bg-[#95C0EC] text-white rounded-2xl rounded-br-md">
                           <p className="text-[15px] whitespace-pre-wrap leading-relaxed">
@@ -384,7 +430,7 @@ function App() {
 
           {/* 输入区域 */}
           <div className="border-t border-black/5 bg-white p-3 sm:p-4">
-            <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-sm shadow-black/[0.03] border border-black/10 focus-within:border-[#95C0EC] focus-within:shadow-md focus-within:shadow-[#95C0EC]/10 transition-all">
+            <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-sm shadow-black/[0.03] border border-black/10 focus-within:border-[#95C0EC] focus-within:shadow-md focus-within:shadow-[#95C0EC]/10 transition-all relative">
               {/* 工具栏 */}
               <div className="flex items-center gap-1 px-3 py-2 border-b border-black/5">
                 <button
@@ -406,19 +452,21 @@ function App() {
               </div>
 
               {/* 文本输入区 */}
-              <div className="flex items-end gap-2 px-3 py-2 relative">
+              <div className="flex items-end gap-2 px-3 py-2">
                 <textarea
                   ref={textareaRef}
                   value={input}
                   onChange={(e) => {
                     setInput(e.target.value)
-                    setTimeout(updateCaretPosition, 0)
+                    setTimeout(updateCaret, 0)
                   }}
                   onFocus={handleInputFocus}
                   onBlur={handleInputBlur}
-                  onClick={updateCaretPosition}
-                  onKeyUp={updateCaretPosition}
+                  onClick={updateCaret}
+                  onKeyUp={updateCaret}
+                  onSelect={updateCaret}
                   onKeyDown={(e) => {
+                    updateCaret()
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault()
                       handleSend()
