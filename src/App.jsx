@@ -1,98 +1,219 @@
 import { useState } from 'react'
+import {
+  Send, Sparkles, Plus, Code, Image, FileText, Settings,
+  User, Bot, Copy, Check, Trash2, Edit3, ChevronDown
+} from 'lucide-react'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [messages, setMessages] = useState([
+    { id: 1, role: 'assistant', content: '你好！我是 AI 助手，有什么可以帮你的吗？' }
+  ])
+  const [input, setInput] = useState('')
+  const [copiedId, setCopiedId] = useState(null)
+
+  // 模型选项
+  const models = [
+    { id: 'gpt4', name: 'GPT-4', desc: '最强大的模型' },
+    { id: 'gpt35', name: 'GPT-3.5', desc: '快速经济' },
+    { id: 'claude', name: 'Claude', desc: '擅长写作' }
+  ]
+
+  // 快捷功能
+  const quickActions = [
+    { icon: Code, label: '代码生成', color: 'bg-blue-500' },
+    { icon: Image, label: '图像分析', color: 'bg-purple-500' },
+    { icon: FileText, label: '文档总结', color: 'bg-green-500' }
+  ]
+
+  const handleSend = () => {
+    if (!input.trim()) return
+    const newMessage = { id: Date.now(), role: 'user', content: input }
+    setMessages([...messages, newMessage])
+    setInput('')
+
+    // 模拟 AI 响应
+    setTimeout(() => {
+      setMessages(prev => [...prev, {
+        id: Date.now() + 1,
+        role: 'assistant',
+        content: '我收到了你的消息："' + input + '"\n\n这是一个演示界面，展示扁平风格设计。'
+      }])
+    }, 500)
+  }
+
+  const copyMessage = (id, content) => {
+    navigator.clipboard.writeText(content)
+    setCopiedId(id)
+    setTimeout(() => setCopiedId(null), 2000)
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
-      {/* 蕾姆风格的头部区域 */}
-      <header className="pt-12 pb-8 text-center">
-        <div className="inline-flex items-center gap-3 mb-4">
-          <div className="w-3 h-3 rounded-full bg-[#95C0EC] animate-pulse"></div>
-          <h1 className="text-4xl font-bold text-white tracking-wide">
-            Tailwind CSS <span className="text-[#95C0EC]">4.0</span>
-          </h1>
-          <div className="w-3 h-3 rounded-full bg-[#95C0EC] animate-pulse"></div>
+    <div className="h-screen flex flex-col bg-slate-50">
+      {/* 顶部导航栏 */}
+      <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center shadow-lg shadow-violet-200">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h1 className="font-bold text-slate-800">AI Assistant</h1>
+            <p className="text-xs text-slate-400">Powered by Intelligence</p>
+          </div>
         </div>
-        <p className="text-slate-400 text-lg">
-          蕾姆精心配置的样式系统 ✨
-        </p>
+
+        <div className="flex items-center gap-3">
+          {/* 模型选择器 */}
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors">
+            <span className="text-sm font-medium text-slate-700">{models[0].name}</span>
+            <ChevronDown className="w-4 h-4 text-slate-400" />
+          </button>
+
+          <button className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Settings className="w-5 h-5 text-slate-500" />
+          </button>
+
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center text-white font-medium text-sm shadow-md">
+            U
+          </div>
+        </div>
       </header>
 
-      {/* 主要内容区域 */}
-      <main className="max-w-4xl mx-auto px-4 pb-16">
-        {/* 卡片网格 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {/* 卡片 1 - 玻璃拟态效果 */}
-          <div className="group relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 p-6 transition-all duration-300 hover:scale-105 hover:bg-white/15 hover:shadow-2xl hover:shadow-[#95C0EC]/20">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-[#95C0EC]/20 rounded-full blur-2xl group-hover:bg-[#95C0EC]/30 transition-colors"></div>
-            <h3 className="text-xl font-semibold text-white mb-2">响应式布局</h3>
-            <p className="text-slate-300 text-sm">Grid 和 Flexbox 完美适配各种屏幕尺寸</p>
-          </div>
+      {/* 主内容区 */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* 侧边栏 */}
+        <aside className="w-64 bg-white border-r border-slate-200 p-4 flex flex-col">
+          <button className="flex items-center gap-2 w-full px-4 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 text-white font-medium shadow-lg shadow-violet-200 hover:shadow-xl hover:shadow-violet-300 transition-all">
+            <Plus className="w-5 h-5" />
+            新对话
+          </button>
 
-          {/* 卡片 2 - 渐变效果 */}
-          <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#95C0EC] to-blue-600 p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-[#95C0EC]/30">
-            <h3 className="text-xl font-semibold text-white mb-2">渐变配色</h3>
-            <p className="text-white/90 text-sm">蕾姆蓝的完美呈现，柔和而优雅</p>
-          </div>
-
-          {/* 卡片 3 - 交互按钮 */}
-          <div className="group relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 p-6 transition-all duration-300 hover:scale-105 hover:bg-white/15">
-            <h3 className="text-xl font-semibold text-white mb-4">交互体验</h3>
-            <button className="w-full py-2 px-4 bg-[#95C0EC] hover:bg-[#7aa8d9] text-white font-medium rounded-lg transition-all duration-200 active:scale-95 shadow-lg shadow-[#95C0EC]/25">
-              点击测试
-            </button>
-          </div>
-        </div>
-
-        {/* 计数器区域 - 展示状态管理 */}
-        <div className="max-w-md mx-auto">
-          <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8 text-center">
-            <h2 className="text-2xl font-bold text-white mb-6">计数器测试</h2>
-            <div className="text-6xl font-bold text-[#95C0EC] mb-6 tabular-nums">
-              {count}
-            </div>
-            <div className="flex gap-4 justify-center">
-              <button
-                onClick={() => setCount(c => Math.max(0, c - 1))}
-                className="px-6 py-3 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30 rounded-xl transition-all duration-200 active:scale-95"
-              >
-                减少
-              </button>
-              <button
-                onClick={() => setCount(c => c + 1)}
-                className="px-6 py-3 bg-[#95C0EC] hover:bg-[#7aa8d9] text-white rounded-xl transition-all duration-200 active:scale-95 shadow-lg shadow-[#95C0EC]/25"
-              >
-                增加
-              </button>
-              <button
-                onClick={() => setCount(0)}
-                className="px-6 py-3 bg-slate-700/50 hover:bg-slate-700/70 text-slate-300 border border-slate-600/50 rounded-xl transition-all duration-200 active:scale-95"
-              >
-                重置
-              </button>
+          <div className="mt-6">
+            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">快捷操作</h3>
+            <div className="space-y-2">
+              {quickActions.map((action) => (
+                <button
+                  key={action.label}
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl hover:bg-slate-100 transition-colors group"
+                >
+                  <div className={`w-9 h-9 rounded-lg ${action.color} flex items-center justify-center shadow-md`}>
+                    <action.icon className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-sm text-slate-700 group-hover:text-slate-900">{action.label}</span>
+                </button>
+              ))}
             </div>
           </div>
-        </div>
 
-        {/* 功能展示列表 */}
-        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-          {['暗色模式', '动画效果', '玻璃拟态', '渐变背景'].map((feature, index) => (
-            <div
-              key={index}
-              className="text-center p-4 rounded-xl bg-white/5 border border-white/10 hover:border-[#95C0EC]/50 transition-colors"
-            >
-              <span className="text-2xl mb-2 block">{['🌙', '✨', '💎', '🎨'][index]}</span>
-              <span className="text-slate-300 text-sm">{feature}</span>
+          <div className="mt-auto">
+            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">历史对话</h3>
+            <div className="space-y-1">
+              {['项目构思', '代码重构', '文案优化'].map((item) => (
+                <button
+                  key={item}
+                  className="flex items-center gap-2 w-full px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-left"
+                >
+                  <FileText className="w-4 h-4 text-slate-400" />
+                  <span className="text-sm text-slate-600 truncate">{item}</span>
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
-      </main>
+          </div>
+        </aside>
 
-      {/* 页脚 */}
-      <footer className="text-center py-6 text-slate-500 text-sm">
-        <p>由蕾姆精心打造 · Tailwind CSS 4.0 + React + Vite</p>
-      </footer>
+        {/* 对话区域 */}
+        <main className="flex-1 flex flex-col">
+          {/* 消息列表 */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex gap-4 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
+              >
+                {/* 头像 */}
+                <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${
+                  message.role === 'user'
+                    ? 'bg-gradient-to-br from-emerald-400 to-cyan-500'
+                    : 'bg-gradient-to-br from-violet-500 to-blue-500'
+                } shadow-md`}>
+                  {message.role === 'user' ? (
+                    <User className="w-5 h-5 text-white" />
+                  ) : (
+                    <Bot className="w-5 h-5 text-white" />
+                  )}
+                </div>
+
+                {/* 消息内容 */}
+                <div className={`flex-1 max-w-2xl ${message.role === 'user' ? 'flex justify-end' : ''}`}>
+                  <div className="relative group">
+                    <div className={`px-5 py-4 rounded-2xl ${
+                      message.role === 'user'
+                        ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white'
+                        : 'bg-white text-slate-700 shadow-sm border border-slate-100'
+                    }`}>
+                      <p className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</p>
+                    </div>
+
+                    {/* 操作按钮 */}
+                    <div className={`absolute top-1/2 -translate-y-1/2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity ${
+                      message.role === 'user' ? 'right-full mr-2' : 'left-full ml-2'
+                    }`}>
+                      <button
+                        onClick={() => copyMessage(message.id, message.content)}
+                        className="p-2 rounded-lg bg-white shadow-md border border-slate-100 hover:bg-slate-50 transition-colors"
+                      >
+                        {copiedId === message.id ? (
+                          <Check className="w-4 h-4 text-green-500" />
+                        ) : (
+                          <Copy className="w-4 h-4 text-slate-400" />
+                        )}
+                      </button>
+                      <button className="p-2 rounded-lg bg-white shadow-md border border-slate-100 hover:bg-slate-50 transition-colors">
+                        <Edit3 className="w-4 h-4 text-slate-400" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* 输入区域 */}
+          <div className="p-6 border-t border-slate-200 bg-white">
+            <div className="max-w-3xl mx-auto">
+              <div className="flex items-end gap-3 p-3 bg-slate-100 rounded-2xl border-2 border-transparent focus-within:border-violet-400 focus-within:bg-white transition-all">
+                <textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault()
+                      handleSend()
+                    }
+                  }}
+                  placeholder="输入你的问题... (Enter 发送, Shift+Enter 换行)"
+                  className="flex-1 bg-transparent resize-none outline-none text-slate-700 placeholder-slate-400 text-sm leading-relaxed"
+                  rows={1}
+                  style={{ minHeight: '24px', maxHeight: '120px' }}
+                />
+                <button
+                  onClick={handleSend}
+                  disabled={!input.trim()}
+                  className={`p-3 rounded-xl transition-all ${
+                    input.trim()
+                      ? 'bg-gradient-to-r from-violet-500 to-blue-500 text-white shadow-lg shadow-violet-200 hover:shadow-xl hover:scale-105'
+                      : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                  }`}
+                >
+                  <Send className="w-5 h-5" />
+                </button>
+              </div>
+              <p className="text-xs text-slate-400 mt-2 text-center">
+                AI 可能产生错误，请核实重要信息
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   )
 }
