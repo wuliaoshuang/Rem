@@ -177,7 +177,7 @@ function DashboardPage() {
                 系统正常
               </span>
             </div>
-            <button className="flex items-center gap-2 text-[13px] text-[#95C0EC] hover:underline">
+            <button className="flex items-center gap-2 text-[13px] text-primary-500 hover:underline">
               <RefreshCw className="w-4 h-4" />
               刷新
             </button>
@@ -271,7 +271,7 @@ function DashboardPage() {
                             {action.description}
                           </p>
                         </div>
-                        <ArrowUpRight className="w-4 h-4 text-[#86868b] dark:text-[#8e8e93] group-hover:text-[#95C0EC] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300 shrink-0" />
+                        <ArrowUpRight className="w-4 h-4 text-[#86868b] dark:text-[#8e8e93] group-hover:text-primary-500 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300 shrink-0" />
                       </div>
                     </button>
                   );
@@ -285,7 +285,7 @@ function DashboardPage() {
                 <h2 className="text-[13px] font-semibold text-[#1d1d1f] dark:text-[#f5f5f7]">
                   最近活动
                 </h2>
-                <button className="text-[12px] text-[#95C0EC] hover:underline">
+                <button className="text-[12px] text-primary-500 hover:underline">
                   查看全部
                 </button>
               </div>
@@ -310,7 +310,7 @@ function DashboardPage() {
                     >
                       <div
                         className="w-8 h-8 rounded-lg flex items-center justify-center shadow-md shrink-0"
-                        style={{ backgroundColor: colors.remBlue }}
+                        style={{ backgroundColor: 'var(--primary)' }}
                       >
                         <Icon className="w-4 h-4 text-white" />
                       </div>
@@ -335,7 +335,7 @@ function DashboardPage() {
               <h2 className="text-[13px] font-semibold text-[#1d1d1f] dark:text-[#f5f5f7]">
                 服务状态
               </h2>
-              <button className="flex items-center gap-1.5 text-[12px] text-[#95C0EC] hover:underline">
+              <button className="flex items-center gap-1.5 text-[12px] text-primary-500 hover:underline">
                 <RefreshCw className="w-3.5 h-3.5" />
                 刷新状态
               </button>
@@ -405,7 +405,7 @@ function DashboardPage() {
                     onClick={() => handleTest(service.id)}
                     disabled={testingService === service.id}
                     className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-white rounded-lg text-[12px] font-medium active:scale-[0.97] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
-                    style={{ backgroundColor: colors.remBlue }}
+                    style={{ backgroundColor: 'var(--primary)' }}
                     onMouseEnter={(e) =>
                       (e.currentTarget.style.opacity = "0.8")
                     }

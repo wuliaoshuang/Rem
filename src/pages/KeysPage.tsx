@@ -91,7 +91,7 @@ function KeysPage() {
           <div className="flex items-center gap-2">
             <button
               className="flex items-center gap-2 px-3 py-2 text-white rounded-xl text-[13px] font-medium active:scale-[0.97] transition-all duration-200 shadow-lg"
-              style={{ backgroundColor: colors.remBlue }}
+              style={{ backgroundColor: 'var(--primary)' }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
@@ -104,13 +104,13 @@ function KeysPage() {
       />
 
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto p-4 space-y-4">
+        <div className="max-w-4xl mx-auto p-4 space-y-4">
           {/* 安全提示卡片 - 桌面应用优化 */}
-          <div className="bg-white/80 dark:bg-[#1c1c1e]/80 backdrop-blur-xl rounded-xl shadow-lg shadow-black/5 p-4 border border-[#95C0EC]/20">
+          <div className="bg-white/80 dark:bg-[#1c1c1e]/80 backdrop-blur-xl rounded-xl shadow-lg shadow-black/5 p-4 border border-primary-500/20">
             <div className="flex items-start gap-3">
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center shadow-lg shrink-0"
-                style={{ backgroundColor: colors.remBlue }}
+                style={{ backgroundColor: 'var(--primary)' }}
               >
                 <Shield className="w-5 h-5 text-white" />
               </div>
@@ -168,7 +168,7 @@ function KeysPage() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-lg flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-110"
-                  style={{ backgroundColor: colors.remBlue }}
+                  style={{ backgroundColor: 'var(--primary)' }}
                 >
                   <Key className="w-5 h-5 text-white" />
                 </div>
@@ -286,7 +286,7 @@ function KeysPage() {
                         className="p-1.5 hover:bg-white dark:hover:bg-[#3a3a3c] rounded-lg transition-all duration-200"
                       >
                         {copiedId === keyItem.id ? (
-                          <Check className="w-3.5 h-3.5 text-[#95C0EC]" />
+                          <Check className="w-3.5 h-3.5 text-primary-500" />
                         ) : (
                           <Copy className="w-3.5 h-3.5 text-[#86868b] dark:text-[#8e8e93]" />
                         )}
@@ -301,7 +301,7 @@ function KeysPage() {
                       </div>
                       <button
                         className="flex items-center gap-1.5 px-3 py-1.5 text-white rounded-lg text-[12px] font-medium active:scale-[0.97] transition-all duration-200 shadow-lg"
-                        style={{ backgroundColor: colors.remBlue }}
+                        style={{ backgroundColor: 'var(--primary)' }}
                         onMouseEnter={(e) =>
                           (e.currentTarget.style.opacity = "0.8")
                         }
@@ -318,7 +318,7 @@ function KeysPage() {
                   {/* 悬停时显示的箭头 */}
                   <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
                     <button className="p-1.5 bg-white dark:bg-[#2a2a2c] rounded-lg shadow-lg hover:scale-110 transition-transform duration-200">
-                      <ArrowUpRight className="w-3.5 h-3.5 text-[#95C0EC]" />
+                      <ArrowUpRight className="w-3.5 h-3.5 text-primary-500" />
                     </button>
                   </div>
                 </div>
@@ -327,9 +327,9 @@ function KeysPage() {
           </div>
 
           {/* 添加新密钥提示 - 桌面应用优化 */}
-          <div className="group bg-white/80 dark:bg-[#1c1c1e]/80 backdrop-blur-xl rounded-xl shadow-lg shadow-black/5 p-6 text-center border-2 border-dashed border-[#e5e5ea] dark:border-[#3a3a3c] hover:border-[#95C0EC]/50 dark:hover:border-[#95C0EC]/30 transition-all duration-200 cursor-pointer hover:-translate-y-0.5">
+          <div className="group bg-white/80 dark:bg-[#1c1c1e]/80 backdrop-blur-xl rounded-xl shadow-lg shadow-black/5 p-6 text-center border-2 border-dashed border-[#e5e5ea] dark:border-[#3a3a3c] hover:border-primary-500/50 dark:hover:border-primary-500/30 transition-all duration-200 cursor-pointer hover:-translate-y-0.5">
             <div className="w-12 h-12 rounded-xl bg-[#f5f5f7] dark:bg-black flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-              <Plus className="w-6 h-6 text-[#95C0EC]" />
+              <Plus className="w-6 h-6 text-primary-500" />
             </div>
             <h3 className="text-[14px] font-semibold text-[#1d1d1f] dark:text-[#f5f5f7] mb-1">
               添加新的 API 密钥

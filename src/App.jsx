@@ -20,8 +20,33 @@ import {
 } from "lucide-react";
 import { MessageContent } from "./components/MessageContent";
 import { ThemeToggle } from "./components/ThemeToggle";
+import { useThemeStore } from "./stores/themeStore";
 
 function App() {
+  // ========================================
+  // 主题初始化 - 蕾姆精心设计
+  // ========================================
+  const initTheme = useThemeStore((state) => state.initTheme);
+
+  useEffect(() => {
+    // 初始化主题
+    initTheme();
+
+    // 监听系统主题变化
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleSystemThemeChange = () => {
+      // 重新应用主题（会自动处理 system 模式）
+      initTheme();
+    };
+
+    // 添加监听器
+    mediaQuery.addEventListener("change", handleSystemThemeChange);
+
+    // 清理监听器
+    return () => {
+      mediaQuery.removeEventListener("change", handleSystemThemeChange);
+    };
+  }, [initTheme]);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -456,7 +481,7 @@ function greet(name) {
               onClick={() => setSidebarCollapsed(false)}
               className="group/btn relative w-9 h-9 mx-auto flex items-center justify-center"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#95C0EC] to-[#7aaddd] rounded-xl flex items-center justify-center shadow-lg shadow-[#95C0EC]/30 transition-all duration-200 group-hover/btn:scale-105">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/30 transition-all duration-200 group-hover/btn:scale-105">
                 <svg
                   className="w-5 h-5 text-white transition-opacity duration-200 group-hover/btn:opacity-0"
                   fill="none"
@@ -481,7 +506,7 @@ function greet(name) {
             /* 展开状态：Logo + 折叠按钮 */
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-gradient-to-br from-[#95C0EC] to-[#7aaddd] rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#95C0EC]/30">
+                <div className="w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary-500/30">
                   <svg
                     className="w-5 h-5 text-white"
                     fill="none"
@@ -515,7 +540,7 @@ function greet(name) {
         {sidebarCollapsed ? (
           <div className="flex-1 flex flex-col items-center gap-2 py-2">
             {/* 新对话 */}
-            <button className="group/btn relative w-9 h-9 bg-[#95C0EC] text-white rounded-xl flex items-center justify-center hover:bg-[#7aaddd] dark:hover:bg-[#b0d4f0] active:scale-95 transition-all duration-200 shadow-lg shadow-[#95C0EC]/25">
+            <button className="group/btn relative w-9 h-9 bg-primary-500 text-white rounded-xl flex items-center justify-center hover:bg-primary-600 dark:hover:bg-primary-600 active:scale-95 transition-all duration-200 shadow-lg shadow-primary-500/25">
               <Plus className="w-5 h-5" />
               <div className="absolute left-full ml-2 px-2 py-1 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] text-[12px] rounded-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
                 新对话
@@ -528,7 +553,7 @@ function greet(name) {
                 key={action.label}
                 className="group/btn relative w-9 h-9 rounded-xl flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200"
               >
-                <action.icon className="w-5 h-5 text-[#95C0EC]" />
+                <action.icon className="w-5 h-5 text-primary-500" />
                 <div className="absolute left-full ml-2 px-2 py-1 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] text-[12px] rounded-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
                   {action.label}
                 </div>
@@ -547,7 +572,7 @@ function greet(name) {
           <>
             {/* 展开状态：新对话按钮 */}
             <div className="px-3 pb-3">
-              <button className="flex items-center gap-2.5 w-full px-4 py-2.5 bg-[#95C0EC] text-white rounded-2xl text-[15px] font-medium hover:bg-[#7aaddd] dark:hover:bg-[#b0d4f0] active:scale-[0.97] transition-all duration-200 shadow-lg shadow-[#95C0EC]/25">
+              <button className="flex items-center gap-2.5 w-full px-4 py-2.5 bg-primary-500 text-white rounded-2xl text-[15px] font-medium hover:bg-primary-600 dark:hover:bg-primary-600 active:scale-[0.97] transition-all duration-200 shadow-lg shadow-primary-500/25">
                 <Plus className="w-4 h-4 flex-shrink-0" />
                 <span>新对话</span>
               </button>
@@ -564,7 +589,7 @@ function greet(name) {
                     key={action.label}
                     className="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl text-[14px] text-[#1d1d1f] dark:text-[#f5f5f7] hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200"
                   >
-                    <action.icon className="w-4 h-4 text-[#95C0EC]" />
+                    <action.icon className="w-4 h-4 text-primary-500" />
                     <span>{action.label}</span>
                   </button>
                 ))}
@@ -650,17 +675,17 @@ function greet(name) {
                     <div className="absolute bottom-0 left-0 flex items-center gap-1">
                       <button
                         onClick={() => copyMessage(message.id, message.content)}
-                        className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all duration-200 text-[#86868b] dark:text-[#8e8e93] hover:text-[#95C0EC]"
+                        className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all duration-200 text-[#86868b] dark:text-[#8e8e93] hover:text-primary-500"
                         title="复制"
                       >
                         {copiedId === message.id ? (
-                          <Check className="w-4 h-4 text-[#95C0EC]" />
+                          <Check className="w-4 h-4 text-primary-500" />
                         ) : (
                           <Copy className="w-4 h-4" />
                         )}
                       </button>
                       <button
-                        className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all duration-200 text-[#86868b] dark:text-[#8e8e93] hover:text-[#95C0EC]"
+                        className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all duration-200 text-[#86868b] dark:text-[#8e8e93] hover:text-primary-500"
                         title="重新生成"
                       >
                         <svg
@@ -678,7 +703,7 @@ function greet(name) {
                         </svg>
                       </button>
                       <button
-                        className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all duration-200 text-[#86868b] dark:text-[#8e8e93] hover:text-[#95C0EC]"
+                        className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all duration-200 text-[#86868b] dark:text-[#8e8e93] hover:text-primary-500"
                         title="点赞"
                       >
                         <svg
@@ -696,7 +721,7 @@ function greet(name) {
                         </svg>
                       </button>
                       <button
-                        className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all duration-200 text-[#86868b] dark:text-[#8e8e93] hover:text-[#95C0EC]"
+                        className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all duration-200 text-[#86868b] dark:text-[#8e8e93] hover:text-primary-500"
                         title="点踩"
                       >
                         <svg
@@ -721,7 +746,7 @@ function greet(name) {
                 {message.role === "user" && (
                   <div className="flex justify-end">
                     <div className="relative group/bubble max-w-xl">
-                      <div className="px-5 py-3 bg-[#95C0EC] text-white rounded-2xl rounded-br-md shadow-lg shadow-[#95C0EC]/20">
+                      <div className="px-5 py-3 bg-primary-500 text-white rounded-2xl rounded-br-md shadow-lg shadow-primary-500/20">
                         <div className="prose prose-sm max-w-none prose-p:text-white prose-invert">
                           <MessageContent content={message.content} />
                         </div>
@@ -736,7 +761,7 @@ function greet(name) {
                           title="复制"
                         >
                           {copiedId === message.id ? (
-                            <Check className="w-3.5 h-3.5 text-[#95C0EC]" />
+                            <Check className="w-3.5 h-3.5 text-primary-500" />
                           ) : (
                             <Copy className="w-3.5 h-3.5 text-[#86868b] dark:text-[#8e8e93]" />
                           )}
@@ -863,7 +888,7 @@ function greet(name) {
                   disabled={!input.trim()}
                   className={`p-3 rounded-2xl transition-all duration-200 active:scale-95 self-end shrink-0 ${
                     input.trim()
-                      ? "bg-[#95C0EC] text-white hover:bg-[#7aaddd] dark:hover:bg-[#b0d4f0] shadow-lg shadow-[#95C0EC]/25"
+                      ? "bg-primary-500 text-white hover:bg-primary-600 dark:hover:bg-primary-600 shadow-lg shadow-primary-500/25"
                       : "bg-[#e5e5ea] dark:bg-[#3a3a3c] text-[#86868b] dark:text-[#636366] cursor-not-allowed"
                   }`}
                 >
@@ -878,7 +903,7 @@ function greet(name) {
                 AI 可能产生错误，请核实重要信息
               </p>
               <span className="text-[#d1d1d6] dark:text-[#4a4a4c]">·</span>
-              <button className="text-[12px] text-[#95C0EC] hover:underline">
+              <button className="text-[12px] text-primary-500 hover:underline">
                 查看快捷键
               </button>
             </div>
@@ -900,7 +925,7 @@ function greet(name) {
                   key={item.label}
                   className="flex flex-col items-center gap-2 px-4 py-3 sm:px-5 rounded-2xl hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200"
                 >
-                  <item.icon className="w-5 h-5 text-[#95C0EC]" />
+                  <item.icon className="w-5 h-5 text-primary-500" />
                   <span className="text-[12px] text-[#1d1d1f] dark:text-[#f5f5f7]">
                     {item.label}
                   </span>

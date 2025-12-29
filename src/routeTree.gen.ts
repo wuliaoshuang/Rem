@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UiRouteImport } from './routes/ui'
-import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ProvidersRouteImport } from './routes/providers'
 import { Route as NetworkRouteImport } from './routes/network'
 import { Route as MemoryRouteImport } from './routes/memory'
@@ -24,11 +23,6 @@ import { Route as ChatIdRouteImport } from './routes/chat.$id'
 const UiRoute = UiRouteImport.update({
   id: '/ui',
   path: '/ui',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProvidersRoute = ProvidersRouteImport.update({
@@ -85,7 +79,6 @@ export interface FileRoutesByFullPath {
   '/memory': typeof MemoryRoute
   '/network': typeof NetworkRoute
   '/providers': typeof ProvidersRoute
-  '/settings': typeof SettingsRoute
   '/ui': typeof UiRoute
   '/chat/$id': typeof ChatIdRoute
   '/chat/': typeof ChatIndexRoute
@@ -97,7 +90,6 @@ export interface FileRoutesByTo {
   '/memory': typeof MemoryRoute
   '/network': typeof NetworkRoute
   '/providers': typeof ProvidersRoute
-  '/settings': typeof SettingsRoute
   '/ui': typeof UiRoute
   '/chat/$id': typeof ChatIdRoute
   '/chat': typeof ChatIndexRoute
@@ -111,7 +103,6 @@ export interface FileRoutesById {
   '/memory': typeof MemoryRoute
   '/network': typeof NetworkRoute
   '/providers': typeof ProvidersRoute
-  '/settings': typeof SettingsRoute
   '/ui': typeof UiRoute
   '/chat/$id': typeof ChatIdRoute
   '/chat/': typeof ChatIndexRoute
@@ -126,7 +117,6 @@ export interface FileRouteTypes {
     | '/memory'
     | '/network'
     | '/providers'
-    | '/settings'
     | '/ui'
     | '/chat/$id'
     | '/chat/'
@@ -138,7 +128,6 @@ export interface FileRouteTypes {
     | '/memory'
     | '/network'
     | '/providers'
-    | '/settings'
     | '/ui'
     | '/chat/$id'
     | '/chat'
@@ -151,7 +140,6 @@ export interface FileRouteTypes {
     | '/memory'
     | '/network'
     | '/providers'
-    | '/settings'
     | '/ui'
     | '/chat/$id'
     | '/chat/'
@@ -165,7 +153,6 @@ export interface RootRouteChildren {
   MemoryRoute: typeof MemoryRoute
   NetworkRoute: typeof NetworkRoute
   ProvidersRoute: typeof ProvidersRoute
-  SettingsRoute: typeof SettingsRoute
   UiRoute: typeof UiRoute
 }
 
@@ -176,13 +163,6 @@ declare module '@tanstack/react-router' {
       path: '/ui'
       fullPath: '/ui'
       preLoaderRoute: typeof UiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/providers': {
@@ -271,7 +251,6 @@ const rootRouteChildren: RootRouteChildren = {
   MemoryRoute: MemoryRoute,
   NetworkRoute: NetworkRoute,
   ProvidersRoute: ProvidersRoute,
-  SettingsRoute: SettingsRoute,
   UiRoute: UiRoute,
 }
 export const routeTree = rootRouteImport

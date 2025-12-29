@@ -125,7 +125,7 @@ function ProvidersPage() {
           <div className="flex items-center gap-2">
             <button
               className="flex items-center gap-2 px-3 py-2 text-white rounded-xl text-[13px] font-medium active:scale-[0.97] transition-all duration-200 shadow-lg"
-              style={{ backgroundColor: colors.remBlue }}
+              style={{ backgroundColor: 'var(--primary)' }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
@@ -138,13 +138,13 @@ function ProvidersPage() {
       />
 
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto p-4 space-y-4">
+        <div className="max-w-4xl mx-auto p-4 space-y-4">
           {/* 统计概览 - 桌面应用优化 */}
           <div className="grid grid-cols-3 gap-3">
             <div className="group bg-white/80 dark:bg-[#1c1c1e]/80 backdrop-blur-xl rounded-xl shadow-lg shadow-black/5 p-3 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110 bg-[#f5f5f7] dark:bg-black">
-                  <CheckCircle className="w-5 h-5 text-[#95c0ec]" />
+                  <CheckCircle className="w-5 h-5 text-primary-500" />
                 </div>
                 <div>
                   <p className="text-[11px] text-[#86868b] dark:text-[#8e8e93] mb-0.5">
@@ -159,7 +159,7 @@ function ProvidersPage() {
             <div className="group bg-white/80 dark:bg-[#1c1c1e]/80 backdrop-blur-xl rounded-xl shadow-lg shadow-black/5 p-3 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110 bg-[#f5f5f7] dark:bg-black">
-                  <Activity className="w-5 h-5 text-[#95c0ec]" />
+                  <Activity className="w-5 h-5 text-primary-500" />
                 </div>
                 <div>
                   <p className="text-[11px] text-[#86868b] dark:text-[#8e8e93] mb-0.5">
@@ -174,7 +174,7 @@ function ProvidersPage() {
             <div className="group bg-white/80 dark:bg-[#1c1c1e]/80 backdrop-blur-xl rounded-xl shadow-lg shadow-black/5 p-3 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110 bg-[#f5f5f7] dark:bg-black">
-                  <TrendingUp className="w-5 h-5 text-[#95c0ec]" />
+                  <TrendingUp className="w-5 h-5 text-primary-500" />
                 </div>
                 <div>
                   <p className="text-[11px] text-[#86868b] dark:text-[#8e8e93] mb-0.5">
@@ -194,7 +194,7 @@ function ProvidersPage() {
               <h2 className="text-[13px] font-semibold text-[#1d1d1f] dark:text-[#f5f5f7]">
                 供应商列表
               </h2>
-              <button className="flex items-center gap-1.5 text-[12px] text-[#95C0EC] hover:underline">
+              <button className="flex items-center gap-1.5 text-[12px] text-primary-500 hover:underline">
                 <RefreshCw className="w-3.5 h-3.5" />
                 刷新状态
               </button>
@@ -317,7 +317,7 @@ function ProvidersPage() {
                           {provider.models.map((model) => (
                             <span
                               key={model}
-                              className="px-2 py-1 bg-[#f5f5f7] dark:bg-black rounded-md text-[12px] text-[#1d1d1f] dark:text-[#f5f5f7] font-medium hover:bg-[#95C0EC]/10 dark:hover:bg-[#95C0EC]/20 hover:text-[#95C0EC] transition-all duration-200 cursor-default"
+                              className="px-2 py-1 bg-[#f5f5f7] dark:bg-black rounded-md text-[12px] text-[#1d1d1f] dark:text-[#f5f5f7] font-medium hover:bg-primary-500/10 dark:hover:bg-primary-500/20 hover:text-primary-500 transition-all duration-200 cursor-default"
                             >
                               {model}
                             </span>
@@ -338,7 +338,7 @@ function ProvidersPage() {
                             provider.status !== "active"
                           }
                           className="flex items-center gap-1.5 px-3 py-1.5 text-white rounded-lg text-[12px] font-medium active:scale-[0.97] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-                          style={{ backgroundColor: colors.remBlue }}
+                          style={{ backgroundColor: 'var(--primary)' }}
                           onMouseEnter={(e) =>
                             (e.currentTarget.style.opacity = "0.8")
                           }
@@ -364,7 +364,7 @@ function ProvidersPage() {
                     {/* 悬停时显示的箭头 */}
                     <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
                       <button className="p-1.5 bg-white dark:bg-[#2a2a2c] rounded-lg shadow-lg hover:scale-110 transition-transform duration-200">
-                        <ArrowUpRight className="w-3.5 h-3.5 text-[#95C0EC]" />
+                        <ArrowUpRight className="w-3.5 h-3.5 text-primary-500" />
                       </button>
                     </div>
                   </div>
@@ -374,9 +374,9 @@ function ProvidersPage() {
           </div>
 
           {/* 添加新供应商卡片 - 桌面应用优化 */}
-          <div className="group bg-white/80 dark:bg-[#1c1c1e]/80 backdrop-blur-xl rounded-xl shadow-lg shadow-black/5 p-6 text-center border-2 border-dashed border-[#e5e5ea] dark:border-[#3a3a3c] hover:border-[#95C0EC]/50 dark:hover:border-[#95C0EC]/30 transition-all duration-200 cursor-pointer hover:-translate-y-0.5">
+          <div className="group bg-white/80 dark:bg-[#1c1c1e]/80 backdrop-blur-xl rounded-xl shadow-lg shadow-black/5 p-6 text-center border-2 border-dashed border-[#e5e5ea] dark:border-[#3a3a3c] hover:border-primary-500/50 dark:hover:border-primary-500/30 transition-all duration-200 cursor-pointer hover:-translate-y-0.5">
             <div className="w-12 h-12 rounded-xl bg-[#f5f5f7] dark:bg-black flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-              <Plus className="w-6 h-6 text-[#95C0EC]" />
+              <Plus className="w-6 h-6 text-primary-500" />
             </div>
             <h3 className="text-[14px] font-semibold text-[#1d1d1f] dark:text-[#f5f5f7] mb-1">
               添加新的供应商

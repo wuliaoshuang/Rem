@@ -53,7 +53,7 @@ export default function MainSidebar({ currentPath }: MainSidebarProps) {
             onClick={() => setSidebarCollapsed(false)}
             className="group/btn relative w-8 h-8 mx-auto flex items-center justify-center"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-[#95C0EC] to-[#7aaddd] rounded-lg flex items-center justify-center shadow-lg shadow-[#95C0EC]/30 transition-all duration-200 group-hover/btn:scale-105">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center shadow-lg shadow-primary-500/30 transition-all duration-200 group-hover/btn:scale-105">
               <svg
                 className="w-4 h-4 text-white transition-opacity duration-200 group-hover/btn:opacity-0"
                 fill="none"
@@ -76,7 +76,7 @@ export default function MainSidebar({ currentPath }: MainSidebarProps) {
         ) : (
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#95C0EC] to-[#7aaddd] rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#95C0EC]/30">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary-500/30">
                 <svg
                   className="w-4 h-4 text-white"
                   fill="none"
@@ -120,7 +120,7 @@ export default function MainSidebar({ currentPath }: MainSidebarProps) {
                 onClick={() => navigate({ to: item.to as any })}
                 className="group/btn relative w-8 h-8 rounded-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200"
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-[#95C0EC]' : 'text-[#86868b] dark:text-[#8e8e93]'}`} />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-primary-500' : 'text-[#86868b] dark:text-[#8e8e93]'}`} />
                 <div className="absolute left-full ml-2 z-50 px-2 py-1 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] text-[11px] rounded-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none shadow-lg">
                   {item.label}
                 </div>
@@ -156,15 +156,15 @@ export default function MainSidebar({ currentPath }: MainSidebarProps) {
                       w-full flex items-center gap-2 px-3 py-2 rounded-lg
                       transition-all duration-200 group relative
                       ${isActive
-                        ? 'bg-[#95C0EC]/10 text-[#95C0EC]'
+                        ? 'bg-primary-500/10 text-primary-500'
                         : 'text-[#1d1d1f] dark:text-[#f5f5f7] hover:bg-black/5 dark:hover:bg-white/10'
                       }
                     `}
                   >
-                    <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[#95C0EC]' : 'text-[#86868b] dark:text-[#8e8e93]'}`} />
+                    <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-primary-500' : 'text-[#86868b] dark:text-[#8e8e93]'}`} />
                     <span className="text-[13px]">{item.label}</span>
                     {item.badge && (
-                      <span className="ml-auto px-1.5 py-0.5 bg-[#95C0EC] text-white text-[10px] rounded-full">
+                      <span className="ml-auto px-1.5 py-0.5 bg-primary-500 text-white text-[10px] rounded-full">
                         {item.badge}
                       </span>
                     )}

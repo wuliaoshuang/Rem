@@ -65,7 +65,7 @@ export function MessageContent({ content }) {
         // ========== 引用块 ==========
         blockquote({ children }) {
           return (
-            <blockquote className="border-l-[3px] border-[#95C0EC] bg-[#95C0EC]/8 dark:bg-[#95C0EC]/15 pl-4 py-2.5 my-3 rounded-r-xl text-[#1d1d1f] dark:text-gray-200">
+            <blockquote className="border-l-[3px] border-primary-500 bg-primary-500/8 dark:bg-primary-500/15 pl-4 py-2.5 my-3 rounded-r-xl text-[#1d1d1f] dark:text-gray-200">
               {children}
             </blockquote>
           );
@@ -73,10 +73,10 @@ export function MessageContent({ content }) {
 
         // ========== 列表 ==========
         ul({ children }) {
-          return <ul className="my-2.5 space-y-1.5 text-[#1d1d1f] dark:text-gray-200 list-disc pl-5 marker:text-[#95C0EC]">{children}</ul>;
+          return <ul className="my-2.5 space-y-1.5 text-[#1d1d1f] dark:text-gray-200 list-disc pl-5 marker:text-primary-500">{children}</ul>;
         },
         ol({ children }) {
-          return <ol className="my-2.5 space-y-1.5 text-[#1d1d1f] dark:text-gray-200 list-decimal pl-5 marker:text-[#95C0EC] marker:font-semibold">{children}</ol>;
+          return <ol className="my-2.5 space-y-1.5 text-[#1d1d1f] dark:text-gray-200 list-decimal pl-5 marker:text-primary-500 marker:font-semibold">{children}</ol>;
         },
         li({ children }) {
           return <li className="text-[15px] leading-[1.6]">{children}</li>;
@@ -95,9 +95,9 @@ export function MessageContent({ content }) {
                 {/* 左侧：语言标签 + 装饰点 */}
                 <div className="flex items-center gap-2.5">
                   <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#95C0EC]/80"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#95C0EC]/50"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#95C0EC]/30"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-primary-500/80"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-primary-500/50"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-primary-500/30"></div>
                   </div>
                   {language && (
                     <span className="text-[11px] font-medium text-[#86868b] dark:text-[#8e8e93] uppercase tracking-wide ml-1">
@@ -114,7 +114,7 @@ export function MessageContent({ content }) {
                     transition-all duration-200 active:scale-95
                     ${copiedCodeId === generateCodeId(currentIndex)
                       ? 'bg-green-500/10 text-green-600 dark:text-green-400'
-                      : 'bg-[#95C0EC]/10 text-[#95C0EC] hover:bg-[#95C0EC]/20 dark:bg-[#95C0EC]/20 dark:hover:bg-[#95C0EC]/30'}
+                      : 'bg-primary-500/10 text-primary-500 hover:bg-primary-500/20 dark:bg-primary-500/20 dark:hover:bg-primary-500/30'}
                   `}
                   title="复制代码"
                 >
@@ -143,7 +143,7 @@ export function MessageContent({ content }) {
               </pre>
             </div>
           ) : (
-            <code className="px-1.5 py-0.5 rounded-md text-[13px] font-mono bg-[#f5f5f7] dark:bg-[#2c2c2e] text-[#95C0EC] border border-[#e5e5ea] dark:border-[#3a3a3c]" {...props}>
+            <code className="px-1.5 py-0.5 rounded-md text-[13px] font-mono bg-[#f5f5f7] dark:bg-[#2c2c2e] text-primary-500 border border-[#e5e5ea] dark:border-[#3a3a3c]" {...props}>
               {children}
             </code>
           );
@@ -156,7 +156,7 @@ export function MessageContent({ content }) {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#95C0EC] hover:text-[#7aaddd] dark:hover:text-[#b0d4f0] hover:underline transition-colors duration-150"
+              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400/90 hover:underline transition-colors duration-150"
               {...props}
             >
               {children}
@@ -179,7 +179,7 @@ export function MessageContent({ content }) {
           return <tbody className="divide-y divide-[#e5e5ea] dark:divide-[#3a3a3c]">{children}</tbody>;
         },
         tr({ children }) {
-          return <tr className="hover:bg-[#95C0EC]/5 dark:hover:bg-[#95C0EC]/10 transition-colors duration-150">{children}</tr>;
+          return <tr className="hover:bg-primary-500/5 dark:hover:bg-primary-500/10 transition-colors duration-150">{children}</tr>;
         },
         th({ children }) {
           return <th className="px-4 py-2.5 text-left font-semibold text-[#1d1d1f] dark:text-white">{children}</th>;

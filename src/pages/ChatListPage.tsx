@@ -290,7 +290,7 @@ function ChatListPage() {
                 placeholder="搜索对话..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-black/5 dark:bg-white/5 rounded-xl text-[14px] text-[#1d1d1f] dark:text-[#f5f5f7] placeholder-[#86868b] dark:placeholder-[#636366] outline-none focus:ring-2 focus:ring-[#95C0EC]/20"
+                className="w-full pl-10 pr-4 py-2.5 bg-black/5 dark:bg-white/5 rounded-xl text-[14px] text-[#1d1d1f] dark:text-[#f5f5f7] placeholder-[#86868b] dark:placeholder-[#636366] outline-none focus:ring-2 focus:ring-primary-500/20"
               />
             </div>
           </div>
@@ -299,7 +299,7 @@ function ChatListPage() {
           <div className="p-4">
             <button
               onClick={handleNewChat}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#95C0EC] text-white rounded-xl text-[14px] font-medium hover:bg-[#7aaddd] dark:hover:bg-[#b0d4f0] transition-all shadow-lg shadow-[#95C0EC]/25"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-500 text-white rounded-xl text-[14px] font-medium hover:bg-primary-600 dark:hover:bg-primary-400 transition-all shadow-lg shadow-primary-500/25"
             >
               <Plus className="w-4 h-4" />
               新对话
@@ -315,16 +315,16 @@ function ChatListPage() {
                   onClick={() => handleSelectConversation(conv.id)}
                   className={`w-full flex items-start gap-3 px-3 py-3 rounded-xl transition-all ${
                     activeConversationId === conv.id
-                      ? 'bg-[#95C0EC]/10'
+                      ? 'bg-primary-500/10'
                       : 'hover:bg-black/5 dark:hover:bg-white/5'
                   }`}
                 >
                   <MessageSquare className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
-                    activeConversationId === conv.id ? 'text-[#95C0EC]' : 'text-[#86868b] dark:text-[#636366]'
+                    activeConversationId === conv.id ? 'text-primary-500' : 'text-[#86868b] dark:text-[#636366]'
                   }`} />
                   <div className="flex-1 min-w-0 text-left">
                     <p className={`text-[14px] font-medium truncate ${
-                      activeConversationId === conv.id ? 'text-[#95C0EC]' : 'text-[#1d1d1f] dark:text-[#f5f5f7]'
+                      activeConversationId === conv.id ? 'text-primary-500' : 'text-[#1d1d1f] dark:text-[#f5f5f7]'
                     }`}>
                       {conv.title}
                     </p>
@@ -359,7 +359,7 @@ function ChatListPage() {
                           className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all text-[#86868b] dark:text-[#8e8e93]"
                         >
                           {copiedMessageId === message.id ? (
-                            <Check className="w-4 h-4 text-[#95C0EC]" />
+                            <Check className="w-4 h-4 text-primary-500" />
                           ) : (
                             <Copy className="w-4 h-4" />
                           )}
@@ -371,7 +371,7 @@ function ChatListPage() {
                   {message.role === 'user' && (
                     <div className="flex justify-end">
                       <div className="relative group/bubble max-w-xl">
-                        <div className="px-5 py-3 bg-[#95C0EC] text-white rounded-2xl rounded-br-md shadow-lg shadow-[#95C0EC]/20">
+                        <div className="px-5 py-3 bg-primary-500 text-white rounded-2xl rounded-br-md shadow-lg shadow-primary-500/20">
                           <div className="prose prose-sm max-w-none prose-p:text-white prose-invert">
                             <MessageContent content={message.content} />
                           </div>
@@ -382,7 +382,7 @@ function ChatListPage() {
                             className="p-1.5 bg-white dark:bg-[#1c1c1e] rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-all shadow-sm"
                           >
                             {copiedMessageId === message.id ? (
-                              <Check className="w-3.5 h-3.5 text-[#95C0EC]" />
+                              <Check className="w-3.5 h-3.5 text-primary-500" />
                             ) : (
                               <Copy className="w-3.5 h-3.5 text-[#86868b] dark:text-[#8e8e93]" />
                             )}
@@ -473,7 +473,7 @@ function ChatListPage() {
                     disabled={!input.trim()}
                     className={`p-3 rounded-2xl transition-all duration-200 active:scale-95 self-end shrink-0 ${
                       input.trim()
-                        ? 'bg-[#95C0EC] text-white hover:bg-[#7aaddd] dark:hover:bg-[#b0d4f0] shadow-lg shadow-[#95C0EC]/25'
+                        ? 'bg-primary-500 text-white hover:bg-primary-600 dark:hover:bg-primary-400 shadow-lg shadow-primary-500/25'
                         : 'bg-[#e5e5ea] dark:bg-[#3a3a3c] text-[#86868b] dark:text-[#636366] cursor-not-allowed'
                     }`}
                   >

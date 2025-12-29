@@ -374,11 +374,11 @@ function ChatPage() {
                       onClick={() =>
                         handleCopyMessage(message.id, message.content)
                       }
-                      className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all duration-200 text-[#86868b] dark:text-[#8e8e93] hover:text-[#95C0EC]"
+                      className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-all duration-200 text-[#86868b] dark:text-[#8e8e93] hover:text-primary-500"
                       title="复制"
                     >
                       {copiedMessageId === message.id ? (
-                        <Check className="w-3.5 h-3.5 text-[#95C0EC]" />
+                        <Check className="w-3.5 h-3.5 text-primary-500" />
                       ) : (
                         <Copy className="w-3.5 h-3.5" />
                       )}
@@ -390,7 +390,7 @@ function ChatPage() {
               {message.role === "user" && (
                 <div className="flex justify-end">
                   <div className="relative group/bubble max-w-md">
-                    <div className="px-4 py-2.5 bg-[#95C0EC] text-white rounded-xl rounded-br-md shadow-lg shadow-[#95C0EC]/20">
+                    <div className="px-4 py-2.5 bg-primary-500 text-white rounded-xl rounded-br-md shadow-lg shadow-primary-500/20">
                       <div className="prose prose-sm max-w-none prose-p:text-white prose-invert">
                         <MessageContent content={message.content} />
                       </div>
@@ -404,7 +404,7 @@ function ChatPage() {
                         title="复制"
                       >
                         {copiedMessageId === message.id ? (
-                          <Check className="w-3 h-3 text-[#95C0EC]" />
+                          <Check className="w-3 h-3 text-primary-500" />
                         ) : (
                           <Copy className="w-3 h-3 text-[#86868b] dark:text-[#8e8e93]" />
                         )}

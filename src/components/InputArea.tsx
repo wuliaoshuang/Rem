@@ -183,7 +183,7 @@ export default function InputArea({
                 disabled={!input.trim()}
                 className={`p-2 rounded-xl transition-all duration-200 active:scale-95 self-end shrink-0 ${
                   input.trim()
-                    ? "bg-[#95C0EC] text-white hover:bg-[#7aaddd] dark:hover:bg-[#b0d4f0] shadow-lg shadow-[#95C0EC]/25"
+                    ? "bg-primary-500 text-white hover:bg-primary-600 dark:hover:bg-primary-400 shadow-lg shadow-primary-500/25"
                     : "bg-[#e5e5ea] dark:bg-[#3a3a3c] text-[#86868b] dark:text-[#636366] cursor-not-allowed"
                 }`}
               >
@@ -210,7 +210,7 @@ export default function InputArea({
               AI 可能产生错误，请核实重要信息
             </p>
             <span className="text-[#d1d1d6] dark:text-[#4a4a4c]">·</span>
-            <button className="text-[11px] text-[#95C0EC] hover:underline">
+            <button className="text-[11px] text-primary-500 hover:underline">
               查看快捷键
             </button>
           </div>
@@ -232,7 +232,7 @@ export default function InputArea({
                 key={item.label}
                 className="flex flex-col items-center gap-1 px-2 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200"
               >
-                <item.icon className="w-4 h-4 text-[#95C0EC]" />
+                <item.icon className="w-4 h-4 text-primary-500" />
                 <span className="text-[10px] text-[#1d1d1f] dark:text-[#f5f5f7]">
                   {item.label}
                 </span>

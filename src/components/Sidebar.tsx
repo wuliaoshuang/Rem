@@ -68,7 +68,7 @@ export default function Sidebar() {
             onClick={() => setSidebarCollapsed(false)}
             className="group/btn relative w-8 h-8 mx-auto flex items-center justify-center"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-[#95C0EC] to-[#7aaddd] rounded-lg flex items-center justify-center shadow-lg shadow-[#95C0EC]/30 transition-all duration-200 group-hover/btn:scale-105">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center shadow-lg shadow-primary-500/30 transition-all duration-200 group-hover/btn:scale-105">
               <svg
                 className="w-4 h-4 text-white transition-opacity duration-200 group-hover/btn:opacity-0"
                 fill="none"
@@ -91,7 +91,7 @@ export default function Sidebar() {
         ) : (
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#95C0EC] to-[#7aaddd] rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#95C0EC]/30">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary-500/30">
                 <svg
                   className="w-4 h-4 text-white"
                   fill="none"
@@ -126,7 +126,7 @@ export default function Sidebar() {
         <div className="flex-1 flex flex-col items-center gap-1.5 py-2">
           <button
             onClick={handleNewConversation}
-            className="group/btn relative w-8 h-8 bg-[#95C0EC] text-white rounded-lg flex items-center justify-center hover:bg-[#7aaddd] dark:hover:bg-[#b0d4f0] active:scale-95 transition-all duration-200 shadow-lg shadow-[#95C0EC]/25"
+            className="group/btn relative w-8 h-8 bg-primary-500 text-white rounded-lg flex items-center justify-center hover:bg-primary-600 dark:hover:bg-primary-600 active:scale-95 transition-all duration-200 shadow-lg shadow-primary-500/25"
           >
             <Plus className="w-4 h-4" />
             <div className="absolute left-full ml-2 z-50 px-2 py-1 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] text-[11px] rounded-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none shadow-lg">
@@ -139,7 +139,7 @@ export default function Sidebar() {
               key={action.label}
               className="group/btn relative w-8 h-8 rounded-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200"
             >
-              <action.icon className="w-4 h-4 text-[#95C0EC]" />
+              <action.icon className="w-4 h-4 text-primary-500" />
               <div className="absolute left-full ml-2 z-50 px-2 py-1 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] text-[11px] rounded-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none shadow-lg">
                 {action.label}
               </div>
@@ -162,7 +162,7 @@ export default function Sidebar() {
           <div className="px-2 pb-2">
             <button
               onClick={handleNewConversation}
-              className="flex items-center gap-2 w-full px-3 py-2 bg-[#95C0EC] text-white rounded-lg text-[13px] font-medium hover:bg-[#7aaddd] dark:hover:bg-[#b0d4f0] active:scale-[0.97] transition-all duration-200 shadow-lg shadow-[#95C0EC]/25"
+              className="flex items-center gap-2 w-full px-3 py-2 bg-primary-500 text-white rounded-lg text-[13px] font-medium hover:bg-primary-600 dark:hover:bg-primary-600 active:scale-[0.97] transition-all duration-200 shadow-lg shadow-primary-500/25"
             >
               <Plus className="w-3.5 h-3.5 flex-shrink-0" />
               <span>新对话</span>
@@ -180,7 +180,7 @@ export default function Sidebar() {
                   key={action.label}
                   className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-[13px] text-[#1d1d1f] dark:text-[#f5f5f7] hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200"
                 >
-                  <action.icon className="w-3.5 h-3.5 text-[#95C0EC]" />
+                  <action.icon className="w-3.5 h-3.5 text-primary-500" />
                   <span>{action.label}</span>
                 </button>
               ))}
@@ -199,7 +199,7 @@ export default function Sidebar() {
                   onClick={() => handleSelectConversation(conv.id)}
                   className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-[13px] transition-all duration-200 ${
                     activeConversationId === conv.id
-                      ? "bg-[#95C0EC]/10 text-[#95C0EC]"
+                      ? "bg-primary-500/10 text-primary-500"
                       : "text-[#1d1d1f] dark:text-[#f5f5f7] hover:bg-black/5 dark:hover:bg-white/10"
                   }`}
                 >

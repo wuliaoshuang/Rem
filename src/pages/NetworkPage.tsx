@@ -81,7 +81,7 @@ function NetworkPage() {
           <div className="flex items-center gap-2">
             <button
               className="flex items-center gap-2 px-3 py-2 text-white rounded-xl text-[13px] font-medium active:scale-[0.97] transition-all duration-200 shadow-lg"
-              style={{ backgroundColor: colors.remBlue }}
+              style={{ backgroundColor: 'var(--primary)' }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
@@ -94,14 +94,14 @@ function NetworkPage() {
       />
 
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto p-4 space-y-4">
+        <div className="max-w-4xl mx-auto p-4 space-y-4">
           {/* 网络状态概览 - 桌面应用优化 */}
           <div className="grid grid-cols-3 gap-3">
             <div className="group bg-white/80 dark:bg-[#1c1c1e]/80 backdrop-blur-xl rounded-xl shadow-lg shadow-black/5 p-3 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-lg flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-110"
-                  style={{ backgroundColor: colors.remBlue }}
+                  style={{ backgroundColor: 'var(--primary)' }}
                 >
                   <Globe className="w-5 h-5 text-white" />
                 </div>
@@ -142,7 +142,7 @@ function NetworkPage() {
                       : ""
                   }`}
                   style={{
-                    backgroundColor: proxyEnabled ? colors.remBlue : "#f5f5f7",
+                    backgroundColor: proxyEnabled ? 'var(--primary)' : "#f5f5f7",
                   }}
                 >
                   <Shield
@@ -178,7 +178,7 @@ function NetworkPage() {
                     className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200`}
                     style={{
                       backgroundColor: proxyEnabled
-                        ? colors.remBlue
+                        ? 'var(--primary)'
                         : "#f5f5f7",
                     }}
                   >
@@ -205,7 +205,7 @@ function NetworkPage() {
                     proxyEnabled ? "" : "bg-[#86868b]/30"
                   }`}
                   style={{
-                    backgroundColor: proxyEnabled ? colors.remBlue : undefined,
+                    backgroundColor: proxyEnabled ? 'var(--primary)' : undefined,
                   }}
                 >
                   <span
@@ -225,7 +225,7 @@ function NetworkPage() {
                   <input
                     type="text"
                     placeholder="127.0.0.1"
-                    className="w-full px-3 py-2 bg-[#f5f5f7] dark:bg-black rounded-lg text-[13px] text-[#1d1d1f] dark:text-[#f5f5f7] outline-none border-2 border-transparent focus:border-[#95C0EC] transition-all duration-200"
+                    className="w-full px-3 py-2 bg-[#f5f5f7] dark:bg-black rounded-lg text-[13px] text-[#1d1d1f] dark:text-[#f5f5f7] outline-none border-2 border-transparent focus:border-primary-500 transition-all duration-200"
                   />
                 </div>
                 <div>
@@ -235,7 +235,7 @@ function NetworkPage() {
                   <input
                     type="number"
                     placeholder="7890"
-                    className="w-full px-3 py-2 bg-[#f5f5f7] dark:bg-black rounded-lg text-[13px] text-[#1d1d1f] dark:text-[#f5f5f7] outline-none border-2 border-transparent focus:border-[#95C0EC] transition-all duration-200"
+                    className="w-full px-3 py-2 bg-[#f5f5f7] dark:bg-black rounded-lg text-[13px] text-[#1d1d1f] dark:text-[#f5f5f7] outline-none border-2 border-transparent focus:border-primary-500 transition-all duration-200"
                   />
                 </div>
               </div>
@@ -331,7 +331,7 @@ function NetworkPage() {
                       onClick={() => handleTest(service.id)}
                       disabled={testingService === service.id}
                       className="w-full flex items-center justify-center gap-2 px-3 py-2 text-white rounded-lg text-[12px] font-medium active:scale-[0.97] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-                      style={{ backgroundColor: colors.remBlue }}
+                      style={{ backgroundColor: 'var(--primary)' }}
                       onMouseEnter={(e) =>
                         (e.currentTarget.style.opacity = "0.8")
                       }
@@ -356,7 +356,7 @@ function NetworkPage() {
                   {/* 悬停时显示的箭头 */}
                   <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
                     <button className="p-1.5 bg-white dark:bg-[#2a2a2c] rounded-lg shadow-lg hover:scale-110 transition-transform duration-200">
-                      <ArrowUpRight className="w-3.5 h-3.5 text-[#95C0EC]" />
+                      <ArrowUpRight className="w-3.5 h-3.5 text-primary-500" />
                     </button>
                   </div>
                 </div>
@@ -397,7 +397,7 @@ function NetworkPage() {
                         ? "bg-emerald-500/10"
                         : log.status === "warning"
                         ? "bg-orange-500/10"
-                        : "bg-[#95C0EC]/10"
+                        : "bg-primary-500/10"
                     }`}
                   >
                     <Clock
@@ -406,7 +406,7 @@ function NetworkPage() {
                           ? "text-emerald-500"
                           : log.status === "warning"
                           ? "text-orange-500"
-                          : "text-[#95C0EC]"
+                          : "text-primary-500"
                       }`}
                     />
                   </div>

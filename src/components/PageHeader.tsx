@@ -64,7 +64,7 @@ export default function PageHeader({
                   }
                   className={`text-[12px] transition-colors duration-200 ${
                     index === breadcrumbs.length - 1
-                      ? "text-[#95C0EC] font-medium"
+                      ? "text-primary-500 font-medium"
                       : "text-[#86868b] dark:text-[#8e8e93] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7]"
                   }`}
                 >
