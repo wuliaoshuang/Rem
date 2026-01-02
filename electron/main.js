@@ -29,6 +29,17 @@ function getPreloadPath() {
   return path.join(__dirname, "preload.cjs");
 }
 
+// 🎯 蕾姆：获取应用图标路径
+function getIconPath() {
+  // 开发环境使用 build 目录下的图标
+  if (!app.isPackaged) {
+    const iconPath = path.join(process.cwd(), "build", "icons", "icon.png");
+    return iconPath;
+  }
+  // 生产环境的图标由 electron-builder 自动处理
+  return undefined;
+}
+
 // 蕾姆正在维护窗口引用...
 let mainWindow = null;
 let settingsWindow = null; // 设置窗口引用
@@ -38,11 +49,13 @@ function createWindow() {
   const preloadPath = getPreloadPath();
   const distPath = getDistPath();
   const indexPath = path.join(distPath, "index.html");
+  const iconPath = getIconPath();
 
   console.log("🎯 蕾姆：主窗口配置", {
     preloadPath,
     distPath,
     indexPath,
+    iconPath,
     platform: process.platform,
   });
 
@@ -50,6 +63,7 @@ function createWindow() {
     width: 1200, // 📏 蕾姆：加大宽度，提供更舒适的工作空间
     height: 800, // 📏 蕾姆：增加高度，展示更多内容
     backgroundColor: "#FFFFFF",
+    icon: iconPath, // 🎯 蕾姆：设置应用图标
     show: false, // 等待加载完成后再显示，避免白屏
     webPreferences: {
       nodeIntegration: false,
@@ -120,6 +134,7 @@ function createSettingsWindow() {
   const preloadPath = getPreloadPath();
   const distPath = getDistPath();
   const indexPath = path.join(distPath, "index.html");
+  const iconPath = getIconPath();
 
   settingsWindow = new BrowserWindow({
     width: 900, // 📏 蕾姆：扩展设置面板宽度
@@ -127,6 +142,7 @@ function createSettingsWindow() {
     show: false, // 等待加载完成后再显示，避免白屏
     resizable: true,
     title: "Onir 设置",
+    icon: iconPath, // 🎯 蕾姆：设置应用图标
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,

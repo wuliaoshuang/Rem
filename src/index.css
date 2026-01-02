@@ -1,5 +1,6 @@
-@import "highlight.js/styles/github-dark.css";
 @import "tailwindcss";
+
+@import "katex/dist/katex.min.css";
 
 /* 配置深色模式 - Tailwind CSS 4.x 语法 */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -629,4 +630,8 @@ body {
     height: 100px;
     top: -40px;
   }
+}
+
+code {
+  background: transparent !important  ;
 }

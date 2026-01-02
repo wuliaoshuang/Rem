@@ -6,29 +6,51 @@
  * - 两个主要操作按钮
  * - 优雅的动画效果
  */
-import { MessageSquare, Key, Plus } from 'lucide-react'
-import { Button } from './ui/Button'
-import { useNavigate } from '@tanstack/react-router'
+import { MessageSquare, Key, Plus } from "lucide-react";
+import { Button } from "./ui/Button";
+import { useNavigate } from "@tanstack/react-router";
+import { useThemeStore } from "../stores/themeStore";
+import { useEffect } from "react";
+import { useState } from "react";
 
 interface EmptyStateProps {
   /** 新建对话的回调函数 */
-  onNewChat?: () => void
+  onNewChat?: () => void;
 }
 
 export function EmptyState({ onNewChat }: EmptyStateProps) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const [isDark, setIsDark] = useState(() => {
+    // 初始化时检测
+    return document.documentElement.classList.contains("dark");
+  });
+
+  useEffect(() => {
+    // 监听 dark class 的变化
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleNewChat = () => {
     if (onNewChat) {
-      onNewChat()
+      onNewChat();
     } else {
-      navigate({ to: '/conversation/new' })
+      navigate({ to: "/conversation/new" });
     }
-  }
+  };
 
   const handleGoToSettings = () => {
-    navigate({ to: '/settings/providers' })
-  }
+    navigate({ to: "/settings/providers" });
+  };
 
   return (
     <div className="h-full flex items-center justify-center bg-light-page dark:bg-dark-page">
@@ -39,9 +61,11 @@ export function EmptyState({ onNewChat }: EmptyStateProps) {
           <div className="absolute inset-0 bg-primary-500/20 blur-3xl rounded-full animate-pulse-slow" />
 
           {/* 图标外圈 */}
-          <div className="relative w-24 h-24 mx-auto flex items-center justify-center rounded-3xl bg-gradient-to-br from-primary-400 to-primary-600 shadow-xl shadow-primary-500/30">
-            <MessageSquare className="w-12 h-12 text-white" strokeWidth={1.5} />
-          </div>
+          <img
+            src={isDark ? "/dark-icon.png" : "/icon.png"}
+            alt="APPIcon"
+            className="w-28 h-28 rounded-[1.5rem]"
+          />
         </div>
 
         {/* 标题 */}
@@ -85,5 +109,5 @@ export function EmptyState({ onNewChat }: EmptyStateProps) {
         </p>
       </div>
     </div>
-  )
+  );
 }
