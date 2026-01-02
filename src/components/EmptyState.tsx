@@ -49,7 +49,7 @@ export function EmptyState({ onNewChat }: EmptyStateProps) {
   };
 
   const handleGoToSettings = () => {
-    navigate({ to: "/settings/providers" });
+    window.electronAPI?.openSettingsWindow();
   };
 
   return (
